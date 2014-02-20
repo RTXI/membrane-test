@@ -1,4 +1,6 @@
-Membrane-Test
-=============
+plugin-template
+===============
 
-Port of membrane-test to Qt4. Completely redone GUI. 
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/RTXI/plugin-template/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
