@@ -5,17 +5,33 @@
 
 #include <new_membrane_test.h>
 #include <main_window.h>
-#include <qgridview.h>
-#include <qhbox.h>
-#include <qhbuttongroup.h>
-#include <qlabel.h>
-#include <qlayout.h>
-#include <qpushbutton.h>
-#include <qtimer.h>
-#include <qtooltip.h>
-#include <qvalidator.h>
-#include <qvbox.h>
-#include <qwhatsthis.h>
+//#include <cmath>
+//#include <gsl/gsl_linalg.h>
+//#include <qgridview.h>
+//#include <qhbox.h>
+//#include <qhbuttongroup.h>
+#include <QLabel>
+#include <QLayout>
+#include <QPushButton>
+#include <QTimer>
+#include <QToolTip>
+#include <QValidator>
+//#include <qvbox.h>
+#include <QWhatsThis>
+
+#include <QButtonGroup>
+#include <QBoxLayout>
+#include <QVBoxLayout>
+#include <QHBoxLayout>
+
+#include <QSpinBox>
+#include <QTabWidget>
+#include <QRadioButton>
+#include <QComboBox>
+#include <QString>
+#include <QLineEdit>
+#include <QGroupBox>
+#include <QFormLayout>
 
 extern "C" Plugin::Object *
 createRTXIPlugin(void)
@@ -25,9 +41,16 @@ createRTXIPlugin(void)
 
 static DefaultGUIModel::variable_t vars[] =
   {
-    { "GUI label", "Tooltip description", DefaultGUIModel::PARAMETER
-        | DefaultGUIModel::DOUBLE, },
-    { "A State", "Tooltip description", DefaultGUIModel::STATE, }, };
+    { "Input (A)", "", DefaultGUIModel::INPUT, },
+    { "Output (V)", "", DefaultGUIModel::OUTPUT, }, 
+    { "Potential (mV)", "", DefaultGUIModel::PARAMETER | DefaultGUIModel::DOUBLE, },
+    { "Amplitude (mV)", "", DefaultGUIModel::PARAMETER | DefaultGUIModel::DOUBLE, }, 
+    { "Period (ms)", "", DefaultGUIModel::PARAMETER | DefaultGUIModel::DOUBLE, }, 
+    { "Amplitude (mV)", "",  DefaultGUIModel::PARAMETER | DefaultGUIModel::DOUBLE, }, 
+    { "Duration (ms)", "", DefaultGUIModel::PARAMETER | DefaultGUIModel::DOUBLE, }, 
+    { "Update Rate (Hz)", "", DefaultGUIModel::PARAMETER | DefaultGUIModel::INTEGER, }, 
+    { "Steps to Average", "", DefaultGUIModel::PARAMETER | DefaultGUIModel::INTEGER, },
+  };
 
 static size_t num_vars = sizeof(vars) / sizeof(DefaultGUIModel::variable_t);
 
@@ -58,9 +81,6 @@ MembraneTest::update(DefaultGUIModel::update_flags_t flag)
     {
   case INIT:
     period = RT::System::getInstance()->getPeriod() * 1e-6; // ms
-    setParameter("GUI label", some_parameter);
-    setState("A State", some_state);
-    break;
   case MODIFY:
     some_parameter = getParameter("GUI label").toDouble();
     break;
@@ -88,8 +108,32 @@ MembraneTest::createGUI(DefaultGUIModel::variable_t *var, int size)
 {
 
   setMinimumSize(200, 300); // Qt API for setting window size
+  
+  QBoxLayout *plugin_layout = new QVBoxLayout(this);
+  QTabWidget *tab_widget = new QTabWidget(this);
 
-  //overall GUI layout with a "horizontal box" copied from DefaultGUIModel
+  QWidget *resist_tab = new QWidget;
+  QHBoxLayout *resist_layout = new QHBoxLayout;
+  
+  QGroupBox *hold_group = new QGroupBox(tr("Hold Potential");
+  QVBoxLayout *hold_layout = new QVBoxLayout;
+  QPushButton *hold_toggle = new QPushButton("Hold");
+  QHBoxLayout *hold_utility = new QHBoxLayout);
+  QPushButton *hold_update = new QPushButton("Update");
+  QPushButton *hold_revert = new QPushButton("Cancel");
+  hold_utility->addWidget(hold_update);
+  hold_utility->addWidget(hold_update);
+  QFormLayout *hold_variables = new QFormLayout;
+  hold_layout->addWidget(hold_toggle);
+  hold_layout->addWidget(hold_variables);
+  hold_layout->add
+  
+  
+  QVBoxLayout *zap_layout = new QVBoxLayout; 
+  
+  
+  
+/*  //overall GUI layout with a "horizontal box" copied from DefaultGUIModel
 
   QBoxLayout *layout = new QHBoxLayout(this);
 
@@ -133,7 +177,7 @@ MembraneTest::createGUI(DefaultGUIModel::variable_t *var, int size)
   QWidget *viewport = new QWidget(sv->viewport());
   sv->addChild(viewport);
   QGridLayout *scrollLayout = new QGridLayout(viewport, 1, 2);
-
+*/
   size_t nstate = 0, nparam = 0, nevent = 0, ncomment = 0;
   for (size_t i = 0; i < num_vars; i++)
     {
