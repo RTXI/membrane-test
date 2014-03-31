@@ -27,19 +27,13 @@ protected:
   update(DefaultGUIModel::update_flags_t);
 
 private:
-
-  double some_parameter;
-  double some_state;
-  double period;
+	QLineEdit *hold_volt;
+	QLineEdit *hold_peak; 
+	QLineEdit *hold_period;
 
 private slots:
 // these are custom functions that can also be connected
 // to events through the Qt API. they must be implemented
 // in new_membrane_test.cpp
-
-  void
-  aBttn_event(void);
-  void
-  bBttn_event(void);
 
 };
