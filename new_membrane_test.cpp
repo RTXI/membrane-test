@@ -231,7 +231,7 @@ MembraneTest::createGUI(DefaultGUIModel::variable_t *var, int size)
   QWidget *viewport = new QWidget(sv->viewport());
   sv->addChild(viewport);
   QGridLayout *scrollLayout = new QGridLayout(viewport, 1, 2);
-*/
+
 
   size_t nstate = 0, nparam = 0, nevent = 0, ncomment = 0;
   for (size_t i = 0; i < num_vars; i++)
@@ -296,7 +296,7 @@ MembraneTest::createGUI(DefaultGUIModel::variable_t *var, int size)
     }
 
   // end DO NOT EDIT
-
+*/
   // add the 3 utility buttons to the bottom of the layout
 //  leftlayout->addWidget(utilityBox);
 
@@ -310,5 +310,3 @@ MembraneTest::createGUI(DefaultGUIModel::variable_t *var, int size)
 }
 
 // functions designated as Qt slots are implemented as regular C++ functions
-
-}
