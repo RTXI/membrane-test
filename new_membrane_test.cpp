@@ -298,12 +298,12 @@ MembraneTest::createGUI(DefaultGUIModel::variable_t *var, int size)
   // end DO NOT EDIT
 
   // add the 3 utility buttons to the bottom of the layout
-  leftlayout->addWidget(utilityBox);
+//  leftlayout->addWidget(utilityBox);
 
   // layouts can contain other layouts. if you added components to
   // "rightlayout" and added "rightlayout" to "layout," you would
   // have left and right panels in your custom GUI.
-  layout->addLayout(leftlayout);
+//  layout->addLayout(leftlayout);
   //layout->addLayout(rightlayout);
 
   show(); // this line is required to render the GUI
