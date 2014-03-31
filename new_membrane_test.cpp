@@ -58,7 +58,7 @@ MembraneTest::MembraneTest(void) :
   DefaultGUIModel("MembraneTest with Custom GUI", ::vars, ::num_vars)
 {
 
-  QWhatsThis::add(this, "<p><b>MembraneTest:</b><br>QWhatsThis description.</p>");
+//  QWhatsThis::add(this, "<p><b>MembraneTest:</b><br>QWhatsThis description.</p>");
   createGUI(vars, num_vars); // this is required to create the GUI
   update( INIT); // this is optional, you may place initialization code directly into the constructor
   refresh(); // this is required to update the GUI with parameter and state values
@@ -80,16 +80,16 @@ MembraneTest::update(DefaultGUIModel::update_flags_t flag)
   switch (flag)
     {
   case INIT:
-    period = RT::System::getInstance()->getPeriod() * 1e-6; // ms
+    //period = RT::System::getInstance()->getPeriod() * 1e-6; // ms
   case MODIFY:
-    some_parameter = getParameter("GUI label").toDouble();
+    //some_parameter = getParameter("GUI label").toDouble();
     break;
   case UNPAUSE:
     break;
   case PAUSE:
     break;
   case PERIOD:
-    period = RT::System::getInstance()->getPeriod() * 1e-6; // ms
+    //period = RT::System::getInstance()->getPeriod() * 1e-6; // ms
     break;
   default:
     break;
