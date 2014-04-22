@@ -87,14 +87,21 @@ NewMembraneTestGUI::NewMembraneTestGUI(QWidget *parent) : QWidget(parent) {
   middle_layout->addWidget(properties_group, 1, 0);
   
   //Membrane Properties output
-//  QGroupBox *output_group = new QGroupBox("Output");
+  QGroupBox *output_group = new QGroupBox("Output");
+
   
   //Resistance at Bottom
-  
+  QWidget *resist_output = new QWidget;
+  QHBoxLayout *resist_layout = new QHBoxLayout;
+  QLabel *resistance = new QLabel;
+  resistance->setText("Please don't close me. I don't want to die.");
+  resist_layout->addWidget(resistance);
+  resist_output->setLayout(resist_layout);
   
   //Put all the plugins together
   plugin_layout->addWidget(utility);
   plugin_layout->addWidget(middle);
+  plugin_layout->addWidget(resist_output);
   
  // /**/plugin_layout->addWidget(hold_group);
   

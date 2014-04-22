@@ -30,6 +30,10 @@ private:
 	QLineEdit *hold_volt;
 	QLineEdit *hold_peak; 
 	QLineEdit *hold_period;
+	QLineEdit *zap_amplitude;
+	QLineEdit *zap_duration
+	QLineEdit *membrane_rate
+	QLineEdit *membrane_num_steps
 
 private slots:
 // these are custom functions that can also be connected
