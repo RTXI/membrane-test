@@ -7,7 +7,7 @@ int main(int argv, char **argc) {
   QApplication app(argv, argc);
   
   NewMembraneTestGUI window;
-//  window->setFixedSize(300,300);
+//  window.setFixedSize(400,350);
   window.show();
   
   return app.exec();
