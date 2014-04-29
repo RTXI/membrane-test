@@ -9,7 +9,7 @@ class NewMembraneTestGUI : public QWidget {
   Q_OBJECT
   
   public:
-    NewMembraneTestGUI(QWidget *parent=0);
+    NewMembraneTestGUI(void);
 	 void createGUI(void);
 	 void beHappy(void);
   

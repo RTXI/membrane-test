@@ -1,5 +1,3 @@
-//#pragma once
-
 #include <QWidget>
 #include <QLabel>
 #include <QLayout>
@@ -21,11 +19,12 @@
 
 #include "membrane_test_gui.h"
 
-NewMembraneTestGUI::NewMembraneTestGUI(QWidget *parent=0) : QWidget(parent) {
+NewMembraneTestGUI::NewMembraneTestGUI(void) {
 	beHappy();
 	createGUI();
 };
-  
+
+
 void NewMembraneTestGUI::beHappy(void) {
 	std::cout<<"Don't worry. Be happy.\n\n...Bitch"<<std::endl;
 }
