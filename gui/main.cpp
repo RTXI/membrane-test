@@ -6,9 +6,10 @@ int main(int argv, char **argc) {
 
   QApplication app(argv, argc);
   
-  NewMembraneTestGUI window;
+  NewMembraneTestGUI *window = new NewMembraneTestGUI();
+//  window->createGUI();
 //  window.setFixedSize(400,350);
-  window.show();
+  window->show();
   
   return app.exec();
   

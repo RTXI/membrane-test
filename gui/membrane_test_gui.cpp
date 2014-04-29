@@ -1,3 +1,5 @@
+//#pragma once
+
 #include <QWidget>
 #include <QLabel>
 #include <QLayout>
@@ -15,11 +17,21 @@
 #include <QLineEdit>
 #include <QGroupBox>
 #include <QFormLayout>
+#include <iostream>
 
 #include "membrane_test_gui.h"
 
-NewMembraneTestGUI::NewMembraneTestGUI(QWidget *parent) : QWidget(parent) {
+NewMembraneTestGUI::NewMembraneTestGUI(QWidget *parent=0) : QWidget(parent) {
+	beHappy();
+	createGUI();
+};
   
+void NewMembraneTestGUI::beHappy(void) {
+	std::cout<<"Don't worry. Be happy.\n\n...Bitch"<<std::endl;
+}
+
+
+void NewMembraneTestGUI::createGUI(void) {
   //Define basic plugin outline
   QVBoxLayout *plugin_layout = new QVBoxLayout(this);
   plugin_layout->setContentsMargins(QMargins(0,0,0,0));
@@ -31,7 +43,8 @@ NewMembraneTestGUI::NewMembraneTestGUI(QWidget *parent) : QWidget(parent) {
   QPushButton *utility_updatebutton = new QPushButton("Update", this);
   QPushButton *utility_resetbutton = new QPushButton("Reset", this);
   utility_resetbutton->setSizePolicy( QSizePolicy::Minimum, QSizePolicy::Minimum );
-//  utility_resetbutton->resize(100,100);
+//  utility_resetbutton->setMinimumHeight(10);
+//  utility_resetbutton->setMinimumWidth(40);
   utility_cancelbutton->setSizePolicy( QSizePolicy::Minimum, QSizePolicy::Minimum );
   utility_updatebutton->setSizePolicy( QSizePolicy::Minimum, QSizePolicy::Minimum );
   utility_layout->addWidget(utility_cancelbutton, 1, Qt::AlignRight);
@@ -45,7 +58,7 @@ NewMembraneTestGUI::NewMembraneTestGUI(QWidget *parent) : QWidget(parent) {
   middle->setLayout(middle_layout);
   
   //Define Hold Potential group
-  /**/QGroupBox *hold_group = new QGroupBox("Holding Potential");
+  QGroupBox *hold_group = new QGroupBox("Holding Potential");
   QFormLayout *hold_layout = new QFormLayout;
   QPushButton *hold_toggle = new QPushButton("Pulse");
   QLineEdit *hold_volt = new QLineEdit;
@@ -55,7 +68,7 @@ NewMembraneTestGUI::NewMembraneTestGUI(QWidget *parent) : QWidget(parent) {
   hold_layout->addRow("Voltage (mV)", hold_volt);
   hold_layout->addRow("Amplitude (mV)", hold_peak);
   hold_layout->addRow("Period (ms)", hold_period);
-  /**/hold_group->setLayout(hold_layout);
+  hold_group->setLayout(hold_layout);
   middle_layout->addWidget(hold_group, 0, 0, 2, 1);
   
   //Define ZAP!! group
@@ -89,7 +102,6 @@ NewMembraneTestGUI::NewMembraneTestGUI(QWidget *parent) : QWidget(parent) {
   //Plugin Output
   QGroupBox *output_group = new QGroupBox("Output");
   QGridLayout *output_layout = new QGridLayout;
-//  QLabel *membrane_properties_title = new QLabel("----Calculated Properties----");
   QLabel *resistance_access_title = new QLabel("<font size=\"+1\">R</font><font size=\"-2\">a</font> :");
   QLabel *capacitance_membrane_title = new QLabel("<font size=\"+1\">C</font><font size=\"-2\">m</font> :");
   QLabel *resistance_membrane_title = new QLabel("<font size=\"+1\">R</font><font size=\"-2\">m</font> :");
@@ -115,9 +127,10 @@ NewMembraneTestGUI::NewMembraneTestGUI(QWidget *parent) : QWidget(parent) {
   resist_layout->addWidget(resistance);
   resist_group->setLayout(resist_layout);
   middle_layout->addWidget(resistance, 3, 1, 1, 1);
+  middle_layout->addWidget(utility, 4, 1, 1, 1);
   
   //Put all the widgets together
-  plugin_layout->addWidget(utility);
+//  plugin_layout->addWidget(utility);
   plugin_layout->addWidget(middle);
-  
 };
+
