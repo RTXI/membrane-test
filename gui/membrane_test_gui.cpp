@@ -20,15 +20,8 @@
 #include "membrane_test_gui.h"
 
 NewMembraneTestGUI::NewMembraneTestGUI(void) {
-	beHappy();
-	createGUI();
+	createGUI();	
 };
-
-
-void NewMembraneTestGUI::beHappy(void) {
-	std::cout<<"Don't worry. Be happy.\n\n...Bitch"<<std::endl;
-}
-
 
 void NewMembraneTestGUI::createGUI(void) {
   //Define basic plugin outline
@@ -42,8 +35,6 @@ void NewMembraneTestGUI::createGUI(void) {
   QPushButton *utility_updatebutton = new QPushButton("Update", this);
   QPushButton *utility_resetbutton = new QPushButton("Reset", this);
   utility_resetbutton->setSizePolicy( QSizePolicy::Minimum, QSizePolicy::Minimum );
-//  utility_resetbutton->setMinimumHeight(10);
-//  utility_resetbutton->setMinimumWidth(40);
   utility_cancelbutton->setSizePolicy( QSizePolicy::Minimum, QSizePolicy::Minimum );
   utility_updatebutton->setSizePolicy( QSizePolicy::Minimum, QSizePolicy::Minimum );
   utility_layout->addWidget(utility_cancelbutton, 1, Qt::AlignRight);
@@ -132,4 +123,3 @@ void NewMembraneTestGUI::createGUI(void) {
 //  plugin_layout->addWidget(utility);
   plugin_layout->addWidget(middle);
 };
-

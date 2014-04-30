@@ -11,8 +11,7 @@ class NewMembraneTestGUI : public QWidget {
   public:
     NewMembraneTestGUI(void);
 	 void createGUI(void);
-	 void beHappy(void);
-  
+
   private:
     QLineEdit *hold_volt;
     QLineEdit *hold_peak; 
