@@ -8,7 +8,7 @@ int main(int argv, char **argc) {
   
   NewMembraneTestGUI window;
 //  window->createGUI();
-//  window.setFixedSize(400,350);
+//  window.setFixedSize(500,350);
   window.show();
   
   return app.exec();
