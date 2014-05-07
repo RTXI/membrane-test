@@ -20,7 +20,9 @@
 #include "membrane_test_gui.h"
 
 NewMembraneTestGUI::NewMembraneTestGUI(void) {
-	createGUI();	
+	createGUI();
+//	std::cout<<this->hold_voltage->value()<<std::endl;
+//setValidators();
 };
 
 
@@ -66,8 +68,8 @@ void NewMembraneTestGUI::createGUI(void) {
 	middle_column2_layout->addWidget(resistance_group);
 
 	//Put GUI boxes, groups. etc together
-//	plugin_layout->addWidget(utility);
 	plugin_layout->addWidget(middle);
+	plugin_layout->addWidget(utility);
 
 	/*
 	 * Flesh out the plugin outline with all the buttons, text, etc. 
@@ -86,39 +88,56 @@ void NewMembraneTestGUI::createGUI(void) {
 	hold_layout->setFieldGrowthPolicy(QFormLayout::FieldsStayAtSizeHint);
 	QPushButton *hold_toggle = new QPushButton("Pulse");
 	hold_toggle->setCheckable(true);
-	QComboBox *hold_voltage = new QComboBox;
-	hold_voltage->setEditable(true);
-	hold_voltage->setSizeAdjustPolicy(QComboBox::AdjustToMinimumContentsLengthWithIcon);
-	hold_voltage->setMinimumContentsLength(3);
-	QComboBox *hold_amplitude = new QComboBox;
-	hold_amplitude->setEditable(true);
-	hold_amplitude->setSizeAdjustPolicy(QComboBox::AdjustToMinimumContentsLengthWithIcon);
-	hold_amplitude->setMinimumContentsLength(3);
-	QComboBox *hold_period = new QComboBox;
-	hold_period->setEditable(true);
-	hold_period->setSizeAdjustPolicy(QComboBox::AdjustToMinimumContentsLengthWithIcon);
-	hold_period->setMinimumContentsLength(3);
+	//QComboBox *hold_voltage = new QComboBox;
+	hold_voltage = new QDoubleSpinBox;
+	hold_voltage->setSuffix(" mV");
+	hold_voltage->setButtonSymbols(QAbstractSpinBox::NoButtons);
+	hold_voltage->setValue(20);
+	//hold_voltage->setEditable(true);
+	//hold_voltage->setSizeAdjustPolicy(QComboBox::AdjustToMinimumContentsLengthWithIcon);
+	//hold_voltage->setMinimumContentsLength(3);
+	//QComboBox *hold_amplitude = new QComboBox;
+	QDoubleSpinBox *hold_amplitude = new QDoubleSpinBox;
+	hold_amplitude->setSuffix(" mV");
+	hold_amplitude->setButtonSymbols(QAbstractSpinBox::NoButtons);
+//	hold_amplitude->setItemText(1,"20");
+//	hold_amplitude->setEditable(true);
+//	hold_amplitude->setSizeAdjustPolicy(QComboBox::AdjustToMinimumContentsLengthWithIcon);
+//	hold_amplitude->setMinimumContentsLength(3);
+	//QComboBox *hold_period = new QComboBox;
+	QDoubleSpinBox *hold_period = new QDoubleSpinBox;
+	hold_period->setSuffix(" ms");
+	hold_period->setButtonSymbols(QAbstractSpinBox::NoButtons);
+//	hold_period->setEditable(true);
+//	hold_period->setSizeAdjustPolicy(QComboBox::AdjustToMinimumContentsLengthWithIcon);
+//	hold_period->setMinimumContentsLength(3);
 	hold_layout->addRow(hold_toggle);
-	hold_layout->addRow("Voltage (mV)", hold_voltage);
-	hold_layout->addRow("Amplitude (mV)", hold_amplitude);
-	hold_layout->addRow("Period (ms)", hold_period);
+	hold_layout->addRow("Voltage", hold_voltage);
+	hold_layout->addRow("Amplitude", hold_amplitude);
+	hold_layout->addRow("Period", hold_period);
 	hold_group->setLayout(hold_layout);
   
 	//Define ZAP!! group
 	QFormLayout *zap_layout = new QFormLayout;
 	zap_layout->setFieldGrowthPolicy(QFormLayout::FieldsStayAtSizeHint);
 	QPushButton *zap_button = new QPushButton("ZAP");
-	QComboBox *zap_amplitude = new QComboBox;
-	zap_amplitude->setEditable(true);
-	zap_amplitude->setSizeAdjustPolicy(QComboBox::AdjustToMinimumContentsLengthWithIcon);
-	zap_amplitude->setMinimumContentsLength(3);
-	QComboBox *zap_duration = new QComboBox;
-	zap_duration->setEditable(true);
-	zap_duration->setSizeAdjustPolicy(QComboBox::AdjustToMinimumContentsLengthWithIcon);
-	zap_duration->setMinimumContentsLength(3);
+//	QComboBox *zap_amplitude = new QComboBox;
+//	zap_amplitude->setEditable(true);
+//	zap_amplitude->setSizeAdjustPolicy(QComboBox::AdjustToMinimumContentsLengthWithIcon);
+//	zap_amplitude->setMinimumContentsLength(3);
+//	QComboBox *zap_duration = new QComboBox;
+//	zap_duration->setEditable(true);
+//	zap_duration->setSizeAdjustPolicy(QComboBox::AdjustToMinimumContentsLengthWithIcon);
+//	zap_duration->setMinimumContentsLength(3);
+	QDoubleSpinBox *zap_amplitude = new QDoubleSpinBox;
+	zap_amplitude->setSuffix(" mV");
+	zap_amplitude->setButtonSymbols(QAbstractSpinBox::NoButtons);
+	QDoubleSpinBox *zap_duration = new QDoubleSpinBox;
+	zap_duration->setSuffix(" ms");
+	zap_duration->setButtonSymbols(QAbstractSpinBox::NoButtons);
 	zap_layout->addRow(zap_button);
-	zap_layout->addRow("Amplitude (mV)", zap_amplitude);
-	zap_layout->addRow("Duration (ms)", zap_duration);
+	zap_layout->addRow("Amplitude", zap_amplitude);
+	zap_layout->addRow("Duration", zap_duration);
 	zap_group->setLayout(zap_layout);
   
 	//Define Membrane Properties
@@ -126,13 +145,18 @@ void NewMembraneTestGUI::createGUI(void) {
 	QPushButton *properties_continuous = new QPushButton("Continuous");
 	properties_continuous->setCheckable(true);
 	QPushButton *properties_single = new QPushButton("Single");
-	QComboBox *properties_rate = new QComboBox;
-	properties_rate->setEditable(true);
-	QComboBox *properties_steps = new QComboBox;
-	properties_steps->setEditable(true);
+//	QComboBox *properties_rate = new QComboBox;
+//	properties_rate->setEditable(true);
+//	QComboBox *properties_steps = new QComboBox;
+//	properties_steps->setEditable(true);
+	QSpinBox *properties_rate = new QSpinBox;
+	properties_rate->setSuffix(" Hz");
+	properties_rate->setButtonSymbols(QAbstractSpinBox::NoButtons);
+	QSpinBox *properties_steps = new QSpinBox;
+	properties_steps->setButtonSymbols(QAbstractSpinBox::NoButtons);
 	properties_layout->addRow(properties_continuous, properties_single);
-	properties_layout->addRow("Update Rate (Hz)", properties_rate);
-	properties_layout->addRow("Steps to Average", properties_steps);
+	properties_layout->addRow("Update Rate", properties_rate);
+	properties_layout->addRow("Num. Steps", properties_steps);
 	properties_group->setLayout(properties_layout);
   
 	//Plugin Output
@@ -148,9 +172,9 @@ void NewMembraneTestGUI::createGUI(void) {
 	output_layout->addWidget(resistance_access_title, 0, 0, Qt::AlignLeft);
 	output_layout->addWidget(resistance_membrane_title, 1, 0, Qt::AlignLeft);
 	output_layout->addWidget(capacitance_membrane_title, 2, 0, Qt::AlignLeft);
-	output_layout->addWidget(resistance_access, 0, 1, Qt::AlignLeft);
-	output_layout->addWidget(resistance_membrane, 1, 1, Qt::AlignLeft);
-	output_layout->addWidget(capacitance_membrane, 2, 1, Qt::AlignLeft);
+	output_layout->addWidget(resistance_access, 0, 1, Qt::AlignRight);
+	output_layout->addWidget(resistance_membrane, 1, 1, Qt::AlignRight);
+	output_layout->addWidget(capacitance_membrane, 2, 1, Qt::AlignRight);
 	output_group->setLayout(output_layout);
   
    //Resistance at Bottom
@@ -161,6 +185,10 @@ void NewMembraneTestGUI::createGUI(void) {
 	resistance_layout->addWidget(resistance);
 	resistance_group->setLayout(resistance_layout);
 };
+
+/*void NewMembraneTestGUI::setValidators(void) {
+	this->hold_voltage->setValidator( new QDoubleValidator( 
+};*/
 /*
 void NewMembraneTestGUI::togglePulse(bool toggled) {
 	if(toggled == true) {

@@ -4,6 +4,7 @@
 #include <QWidget>
 #include <QLineEdit>
 #include <QComboBox>
+#include <QSpinBox>
 
 class NewMembraneTestGUI : public QWidget {
 
@@ -13,8 +14,18 @@ class NewMembraneTestGUI : public QWidget {
 		NewMembraneTestGUI(void);
 		void createGUI(void);
 
-	private:
-		QComboBox *hold_voltage;
+//	private:
+		QDoubleSpinBox *hold_voltage;
+		QDoubleSpinBox *hold_amplitude;
+		QDoubleSpinBox *hold_period;
+		
+		QDoubleSpinBox *zap_amplitude;
+		QDoubleSpinBox *zap_duration;
+		
+		QDoubleSpinBox *properties_rate;
+		QDoubleSpinBox *properties_steps;
+		
+		/*QComboBox *hold_voltage;
 		QComboBox *hold_amplitude; 
 		QComboBox *hold_period;
 
@@ -22,7 +33,7 @@ class NewMembraneTestGUI : public QWidget {
 		QComboBox *zap_duration;
     
 		QComboBox *properties_rate;
-		QComboBox *properties_steps;
+		QComboBox *properties_steps;*/
 
 
 /*		struct RTFlags {
