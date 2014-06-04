@@ -5,6 +5,7 @@
 #include <QLineEdit>
 #include <QComboBox>
 #include <QSpinBox>
+#include <QRadioButton>
 
 class NewMembraneTestGUI : public QWidget {
 
@@ -15,9 +16,14 @@ class NewMembraneTestGUI : public QWidget {
 		void createGUI(void);
 
 //	private:
-		QDoubleSpinBox *hold_voltage;
+		QDoubleSpinBox *hold_voltage1;
+		QDoubleSpinBox *hold_voltage2;
+		QDoubleSpinBox *hold_voltage3;
 		QDoubleSpinBox *hold_amplitude;
 		QDoubleSpinBox *hold_period;
+		QRadioButton *pick_voltage1;
+		QRadioButton *pick_voltage2;
+		QRadioButton *pick_voltage3;
 		
 		QDoubleSpinBox *zap_amplitude;
 		QDoubleSpinBox *zap_duration;

@@ -7,6 +7,8 @@
 #include <QValidator>
 #include <QWhatsThis>
 #include <QButtonGroup>
+#include <QRadioButton>
+#include <QTextEdit>
 #include <QBoxLayout>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
@@ -84,51 +86,65 @@ void NewMembraneTestGUI::createGUI(void) {
 	utility_layout->addWidget(utility_cancelbutton, 1, Qt::AlignRight);
 	utility_layout->addWidget(utility_updatebutton, 0, Qt::AlignRight);
 	utility_layout->addWidget(utility_resetbutton, 0, Qt::AlignRight);
+
+	//Create holding voltage selection group
+//	QVBoxLayout *hold_layout = new QVBoxLayout;
 	QFormLayout *hold_layout = new QFormLayout;
-	hold_layout->setFieldGrowthPolicy(QFormLayout::FieldsStayAtSizeHint);
 	QPushButton *hold_toggle = new QPushButton("Pulse");
 	hold_toggle->setCheckable(true);
-	//QComboBox *hold_voltage = new QComboBox;
-	hold_voltage = new QDoubleSpinBox;
-	hold_voltage->setSuffix(" mV");
-	hold_voltage->setButtonSymbols(QAbstractSpinBox::NoButtons);
-	hold_voltage->setValue(20);
-	//hold_voltage->setEditable(true);
-	//hold_voltage->setSizeAdjustPolicy(QComboBox::AdjustToMinimumContentsLengthWithIcon);
-	//hold_voltage->setMinimumContentsLength(3);
-	//QComboBox *hold_amplitude = new QComboBox;
+	hold_layout->addRow(hold_toggle);
+	QFormLayout *voltage_layout = new QFormLayout;
+	hold_layout->addRow("Voltage", voltage_layout);
+//	QGroupBox *voltage_list = new QGroupBox("Voltage");
+//	QFormLayout *voltage_layout = new QFormLayout;
+//	voltage_list->setLayout(voltage_layout);
+//	QWidget *remaining_options = new QWidget;
+//	QFormLayout *remaining_layout = new QFormLayout;
+//	remaining_options->setLayout(remaining_layout);
+//	remaining_layout->setFieldGrowthPolicy(QFormLayout::FieldsStayAtSizeHint);
+
+	hold_voltage1 = new QDoubleSpinBox;
+	pick_voltage1 = new QRadioButton;
+	pick_voltage1->setChecked(true);
+	hold_voltage1->setSuffix(" mV");
+	hold_voltage1->setButtonSymbols(QAbstractSpinBox::NoButtons);
+	hold_voltage1->setValue(20);
+	voltage_layout->addRow(pick_voltage1, hold_voltage1);
+
+	hold_voltage2 = new QDoubleSpinBox;
+	pick_voltage2 = new QRadioButton;
+	hold_voltage2->setSuffix(" mV");
+	hold_voltage2->setButtonSymbols(QAbstractSpinBox::NoButtons);
+	hold_voltage2->setValue(120);
+	voltage_layout->addRow(pick_voltage2, hold_voltage2);
+
+	hold_voltage3 = new QDoubleSpinBox;
+	pick_voltage3 = new QRadioButton;
+	hold_voltage3->setSuffix(" mV");
+	hold_voltage3->setButtonSymbols(QAbstractSpinBox::NoButtons);
+	hold_voltage3->setValue(70);
+	voltage_layout->addRow(pick_voltage3, hold_voltage3);
+
 	QDoubleSpinBox *hold_amplitude = new QDoubleSpinBox;
 	hold_amplitude->setSuffix(" mV");
 	hold_amplitude->setButtonSymbols(QAbstractSpinBox::NoButtons);
-//	hold_amplitude->setItemText(1,"20");
-//	hold_amplitude->setEditable(true);
-//	hold_amplitude->setSizeAdjustPolicy(QComboBox::AdjustToMinimumContentsLengthWithIcon);
-//	hold_amplitude->setMinimumContentsLength(3);
-	//QComboBox *hold_period = new QComboBox;
 	QDoubleSpinBox *hold_period = new QDoubleSpinBox;
 	hold_period->setSuffix(" ms");
 	hold_period->setButtonSymbols(QAbstractSpinBox::NoButtons);
-//	hold_period->setEditable(true);
-//	hold_period->setSizeAdjustPolicy(QComboBox::AdjustToMinimumContentsLengthWithIcon);
-//	hold_period->setMinimumContentsLength(3);
-	hold_layout->addRow(hold_toggle);
-	hold_layout->addRow("Voltage", hold_voltage);
 	hold_layout->addRow("Amplitude", hold_amplitude);
 	hold_layout->addRow("Period", hold_period);
+	
+//	hold_layout->addWidget(hold_toggle);
+//	hold_layout->addWidget(voltage_list);
+
+//	remaining_layout->addRow("Voltage", hold_voltage);
+//	hold_layout->addWidget(remaining_options);
 	hold_group->setLayout(hold_layout);
   
 	//Define ZAP!! group
 	QFormLayout *zap_layout = new QFormLayout;
 	zap_layout->setFieldGrowthPolicy(QFormLayout::FieldsStayAtSizeHint);
 	QPushButton *zap_button = new QPushButton("ZAP");
-//	QComboBox *zap_amplitude = new QComboBox;
-//	zap_amplitude->setEditable(true);
-//	zap_amplitude->setSizeAdjustPolicy(QComboBox::AdjustToMinimumContentsLengthWithIcon);
-//	zap_amplitude->setMinimumContentsLength(3);
-//	QComboBox *zap_duration = new QComboBox;
-//	zap_duration->setEditable(true);
-//	zap_duration->setSizeAdjustPolicy(QComboBox::AdjustToMinimumContentsLengthWithIcon);
-//	zap_duration->setMinimumContentsLength(3);
 	QDoubleSpinBox *zap_amplitude = new QDoubleSpinBox;
 	zap_amplitude->setSuffix(" mV");
 	zap_amplitude->setButtonSymbols(QAbstractSpinBox::NoButtons);
@@ -145,10 +161,6 @@ void NewMembraneTestGUI::createGUI(void) {
 	QPushButton *properties_continuous = new QPushButton("Continuous");
 	properties_continuous->setCheckable(true);
 	QPushButton *properties_single = new QPushButton("Single");
-//	QComboBox *properties_rate = new QComboBox;
-//	properties_rate->setEditable(true);
-//	QComboBox *properties_steps = new QComboBox;
-//	properties_steps->setEditable(true);
 	QSpinBox *properties_rate = new QSpinBox;
 	properties_rate->setSuffix(" Hz");
 	properties_rate->setButtonSymbols(QAbstractSpinBox::NoButtons);
@@ -181,7 +193,7 @@ void NewMembraneTestGUI::createGUI(void) {
 	QHBoxLayout *resistance_layout = new QHBoxLayout;
 	QLabel *resistance = new QLabel;
 	resistance->setAlignment((Qt::AlignCenter));
-	resistance->setText("Please don't close me.\nI'm afraid to not exist.");
+	resistance->setText("RESISTANCE");
 	resistance_layout->addWidget(resistance);
 	resistance_group->setLayout(resistance_layout);
 };
