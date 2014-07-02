@@ -1,38 +1,83 @@
-#include <QWidget>
-#include <QLabel>
-#include <QLayout>
-#include <QPushButton>
-#include <QTimer>
-#include <QToolTip>
-#include <QValidator>
-#include <QWhatsThis>
-#include <QButtonGroup>
-#include <QRadioButton>
-#include <QTextEdit>
-#include <QBoxLayout>
-#include <QVBoxLayout>
-#include <QHBoxLayout>
-#include <QComboBox>
-#include <QString>
-#include <QLineEdit>
-#include <QGroupBox>
-#include <QFormLayout>
-#include <iostream>
+#include <QtGui>
+#include <main_window.h>
+#include <cmath>
+#include <gsl/gsl_linalg.h>
+#include "new_membrane_test.h"
 
-#include "membrane_test_gui.h"
+extern "C" Plugin::Object *createRTXIPlugin(void *) {
+	return new MembraneTest();
+}
 
-NewMembraneTestGUI::NewMembraneTestGUI(void) {
-	createGUI();
-//	std::cout<<this->hold_voltage->value()<<std::endl;
-//setValidators();
+static DefaultGUIModel::variable_t vars[] = {
+	{ "Current Input (A)", "", DefaultGUIModel::INPUT, },
+	{ "Voltage Output (V)", "", DefaultGUIModel::OUTPUT, }, 
+	{ "Hold Potential", "Set the holding potential of the membrane", DefaultGUIModel::PARAMETER | DefaultGUIModel::DOUBLE, },
+	{ "Hold Amplitude", "Set the amplitude of the sine wave used for the holding potential", DefaultGUIModel::PARAMETER | DefaultGUIModel::PARAMETER, },
+	{ "Hold Period", "Set the period, or width, of the holding pulses", DefaultGUIModel::PARAMETER | DefaultGUIModel::DOUBLE, }, 
+	{ "Zap Amplitude", "Set the amplitude for the single zap", DefaultGUIModel::PARAMETER | DefaultGUIModel::DOUBLE, },
+	{ "Zap Duration", "Duration of the zap pulse", DefaultGUIModel::PARAMETER | DefaultGUIModel::DOUBLE, },
+	{ "Update Rate", "Update rate for membrane properties measurement", DefaultGUIModel::PARAMETER | DefaultGUIModel::UINTEGER, },
+	{ "Num. Steps", "Number of steps to use for calculating membrane properties", DefaultGUIModel::PARAMETER | DefaultGUIModel::UINTEGER, },
+	{ "Resistance", "", DefaultGUIModel::STATE, }, 
+	{ "Capacitance", "", DefaultGUIModel::STATE, }, 
+	{ "Access Resistance", "", DefaultGUIModel::STATE, }, 
+	{ "Membrane Resistance", "", DefaultGUIModel::STATE, },
 };
 
+static size_t num_vars = sizeof(vars) / sizeof(DefaultGUIModel::variable_t);
 
+MembraneTest::MembraneTest(void) : DefaultGUIModel("Test Membrane Properties", ::vars, ::num_vars) {
+	setWhatsThis("<p><b>MembraneTest:</b><br>Allows users to hold membranes at designated potentials and then zap them or measure their capcitance, access resistance, and overall resistance.</p>");
+	DefaultGUIModel::createGUI(vars, num_vars);
+//	customizeGUI();
+//	initParameters();
+//	update( INIT );
+//	refresh();
+};
 
-void NewMembraneTestGUI::createGUI(void) {
-	/*
-	 * Define plugin outline and groups
-	 */
+MembraneTest::~MembraneTest(void) {}
+
+void MembraneTest::execute(void) { 
+	return; 
+}
+
+void MembraneTest::update(DefaultGUIModel::update_flags_t flag) {
+	switch (flag) {
+		case INIT:
+			period = RT::System::getInstance()->getPeriod() * 1e-6; //ms
+			setParameter("Hold Potential", hold_potential);
+			setParameter("Hold Amplitude", hold_amplitude);
+			setParameter("Hold Period", hold_period);
+			setParameter("Zap Amplitude", zap_amplitude);
+			setParameter("Zap Duration", zap_duration);
+			setParameter("Update Rate", mem_update);
+			setParameter("Num. Steps", mem_steps);
+			setState("Resistance", resistance);
+			setState("Capacitance", capacitance);
+			setState("Access Resistance", access_resistance);
+			setState("Membrane Reistance", membrane_resistance);
+			break;
+		case MODIFY:
+			setParameter("Hold Potential", hold_potential);
+			setParameter("Hold Amplitude", hold_amplitude);
+			setParameter("Hold Period", hold_period);
+			setParameter("Zap Amplitude", zap_amplitude);
+			setParameter("Zap Duration", zap_duration);
+			setParameter("Update Rate", mem_update);
+			setParameter("Num. Steps", mem_steps);
+			break;
+		case PAUSE:
+			break;
+		case PERIOD:
+			period = RT::System::getInstance()->getPeriod() * 1e-6; //ms
+			break;
+		default:
+			break;
+	}
+}
+
+/*
+void MembraneTest::createGUI(void) {
 	//Overall plugin
 	QVBoxLayout *plugin_layout = new QVBoxLayout(this);
 	plugin_layout->setContentsMargins(QMargins(0,0,0,0));
@@ -73,9 +118,6 @@ void NewMembraneTestGUI::createGUI(void) {
 	plugin_layout->addWidget(middle);
 	plugin_layout->addWidget(utility);
 
-	/*
-	 * Flesh out the plugin outline with all the buttons, text, etc. 
-	 */
 	//Create Cancel, Update, and Reset buttons
 	QPushButton *utility_cancelbutton = new QPushButton("Cancel", this);
 	QPushButton *utility_updatebutton = new QPushButton("Update", this);
@@ -196,15 +238,5 @@ void NewMembraneTestGUI::createGUI(void) {
 	resistance->setText("RESISTANCE");
 	resistance_layout->addWidget(resistance);
 	resistance_group->setLayout(resistance_layout);
-};
-
-/*void NewMembraneTestGUI::setValidators(void) {
-	this->hold_voltage->setValidator( new QDoubleValidator( 
-};*/
-/*
-void NewMembraneTestGUI::togglePulse(bool toggled) {
-	if(toggled == true) {
-	
-	
 };
 */
