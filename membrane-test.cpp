@@ -21,7 +21,7 @@
 #include <main_window.h>
 #include <cmath>
 #include <gsl/gsl_linalg.h>
-#include "new_membrane_test.h"
+#include "membrane-test.h"
 
 // Create RTXI plugin object
 extern "C" Plugin::Object *createRTXIPlugin(void *) {
@@ -116,13 +116,13 @@ void MembraneTest::execute(void) {
 			newdata[mem_index] += input(0);
 			mem_index++;
 		
-			output(0) = ( Vapp + hold_amplitude ) * 1e-3;
+			output(0) = ( Vapp + hold_amplitude ) * 1e-3; //mV
 		}
 		else {
 			newdata[mem_index] += input(0);
 			mem_index++;
 
-			output(0) = Vapp * 1e-3;
+			output(0) = Vapp * 1e-3; //mV
 		}
 		
 		// increment hold_index and output chunk of data when hold_count points are collected
@@ -222,9 +222,9 @@ void MembraneTest::update(DefaultGUIModel::update_flags_t flag) {
 			break;
 		
 		case PERIOD:
-			period = RT::System::getInstance()->getPeriod() * 1e-6; //ms
-			hold_count = hold_period * 2 / period;
-			zap_count = zap_duration / period;
+			period = RT::System::getInstance()->getPeriod() * 1e-9; //ms
+			hold_count = hold_period * 2 * 1e-3/ period;
+			zap_count = zap_duration * 1e-3 / period;
 			mode_changed = true;
 			break;
 		
@@ -379,7 +379,7 @@ void MembraneTest::computeMembraneProperties(void) {
 			I2 += data[i];
 		I2 /= ceil(data_size/8);
 					
-		double dt = period;
+		double dt = RT::System::getInstance()->getPeriod() * 1e-6;
 				
 		double Q11;
 		double tau1;
