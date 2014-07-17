@@ -88,6 +88,26 @@ void MembraneTest::execute(void) {
 		
 		mode_changed = false;
 	}
+
+	if (volt_changed) {
+		switch (volt_mode) {
+			case VOLTAGE1:
+				Vapp = V1;
+				break;
+
+			case VOLTAGE2:
+				Vapp = V2;
+				break;
+
+			case VOLTAGE3:
+				Vapp = V3;
+				break;
+
+			default:
+				break;
+		}
+		volt_changed = false;
+	}
 	
 	// Takes input from 2nd and 4th quarters of 1 periodic square pulse.
 	if (mem_mode == SIMPLE) {
@@ -128,14 +148,7 @@ void MembraneTest::execute(void) {
 		// increment hold_index and output chunk of data when hold_count points are collected
 		if ( !( ++hold_index %= hold_count )) {
 			mem_index = 0; 
-/*	// just in case...		
-			if (!collectMemTestData) {
-				mem_steps_saved = 1;
-				collectMemTestData = true;
-				newdata.clear();
-				newdata.resize(hold_count, 0);
-			}
-*/
+			
 			// number of steps saved (each element has mem_steps points added to it) == mem_steps
 			if ( ++mem_steps_saved > mem_steps ) {
 				mem_steps_saved = 1;
@@ -143,7 +156,6 @@ void MembraneTest::execute(void) {
 				mem_index = 0;
 				newdata.clear(); //reset 'newdata' for next round of data collection
 				newdata.resize(hold_count, 0); //resize in case period changed. 
-//				memTestDone = true;
 			}
 		}	
 	}
@@ -327,19 +339,19 @@ void MembraneTest::selectMode(int mode) {
 void MembraneTest::selectVoltage(int mode) {
 	switch (mode) {
 		case VOLTAGE1:
-			Vapp = V1;
+//			Vapp = V1;
 			volt_mode = VOLTAGE1;
 			v1_button->setChecked(true);
 			break;
 
 		case VOLTAGE2:
-			Vapp = V2;
+//			Vapp = V2;
 			volt_mode = VOLTAGE2;
 			v2_button->setChecked(true);
 			break;
 
 		case VOLTAGE3:
-			Vapp = V3;
+//			Vapp = V3;
 			volt_mode = VOLTAGE3;
 			v3_button->setChecked(true);
 			break;
@@ -348,7 +360,7 @@ void MembraneTest::selectVoltage(int mode) {
 			break;
 	}
 
-	volt_changed = true; // currently, the flag doesn't do anything. 
+	volt_changed = true; 
 	return;
 }
 
