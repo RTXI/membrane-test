@@ -1,4 +1,4 @@
-PLUGIN_NAME = membrane_test
+PLUGIN_NAME = membrane-test
 
 HEADERS = new_membrane_test.h
 
