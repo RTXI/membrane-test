@@ -2,7 +2,7 @@ PLUGIN_NAME = membrane_test
 
 HEADERS = membrane-test.h
 
-LIBS = -lgsl
+LIBS = -lgsl -lgslcblas
 
 SOURCES = membrane-test.cpp \
 	moc_membrane-test.cpp 
