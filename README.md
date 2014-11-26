@@ -5,9 +5,11 @@
 
 ![Membrane Test GUI](membrane-test.png)
 
+<!--start-->
 Generates a square wave pulse with amplitude equal to one of the user-set hold potentials. The first half is the resting potential plus the amplitude of the wave, and the second half is just the resting potential.
 
 Using current input gained while the pulse is running, the module can calculate the membrane resistance (Simple option) or multiple resistance and capacitance (Detailed option)
+<!--end-->
 
 ####Input Channels
 1. input(0) : current input (A)
