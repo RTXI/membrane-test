@@ -56,6 +56,7 @@ MembraneTest::MembraneTest(void) : DefaultGUIModel("Membrane Properties", ::vars
 	customizeGUI(); // customize the GUI
 	update( INIT ); // sync the GUI with the intialized parameters
 	refresh(); // refresh the GUI to it displays the synced changes
+	QTimer::singleShot(0, this, SLOT(resizeMe()));
 };
 
 MembraneTest::~MembraneTest(void) {}
