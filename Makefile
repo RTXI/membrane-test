@@ -1,11 +1,13 @@
 PLUGIN_NAME = membrane_test
 
-HEADERS = membrane-test.h
+HEADERS = membrane_test.h
 
-LIBS = -lgsl -lgslcblas
+LIBS =
 
-SOURCES = membrane-test.cpp \
-	moc_membrane-test.cpp 
+SOURCES = membrane_test.cpp \
+	membrane_testUI.cpp \
+	moc_membrane_test.cpp \
+	moc_membrane_testUI.cpp
 
 ### Do not edit below this line ###
 
