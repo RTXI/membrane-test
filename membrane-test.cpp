@@ -78,7 +78,7 @@ void MembraneTest::execute(void) {
 		}
 		return;
 	}
-
+/*
 	//clears data if the acquistion mode changes. Guarantees data is obtained contiguously
 	if (mode_changed) {
 		I1 = I2 = dI = 0;
@@ -109,7 +109,7 @@ void MembraneTest::execute(void) {
 		}
 		volt_changed = false;
 	}
-	
+*/	
 	// Takes input from 2nd and 4th quarters of 1 periodic square pulse.
 	if (mem_mode == SIMPLE) {
 		if  (hold_index < (hold_count/2)) {
@@ -205,11 +205,59 @@ void MembraneTest::update(DefaultGUIModel::update_flags_t flag) {
 			setState("Cm", Cm);
 			setState("Ra", Ra);
 			setState("Rm", Rm);
-			selectMode(mem_mode);
-			selectVoltage(volt_mode);
+//			selectMode(mem_mode);
+//			selectVoltage(volt_mode);
+
+			v1_button->setChecked(true);
+			simple_button->setChecked(true);
 			break;
 		
 		case MODIFY:
+			if (volt_changed) {
+				switch (voltbuttonsgroup->checkedId()) {
+					case VOLTAGE1:
+						Vapp = V1;
+						break;
+
+					case VOLTAGE2:
+						Vapp = V2;
+						break;
+
+					case VOLTAGE3:
+						Vapp = V3;
+						break;
+
+					default:
+						break;
+				}
+				volt_changed = false;
+//				return;
+			}
+
+			if (mode_changed) {
+				switch (membuttonsgroup->checkedId()) {
+					case SIMPLE:
+						mem_mode = SIMPLE;
+						break;
+
+					case DETAILED:
+						mem_mode = DETAILED;
+						break;
+
+					default:
+						break;			
+				}
+
+				I1 = I2 = dI = 0;
+				mem_steps_saved = 1;
+				mem_index = 0;
+				newdata.clear();
+				newdata.resize(hold_count, 0);
+				
+				mode_changed = false;
+//				return;
+			}
+
 			V1 = getParameter("Hold (V1)").toDouble();
 			V2 = getParameter("Hold (V2)").toDouble();
 			V3 = getParameter("Hold (V3)").toDouble();
@@ -222,8 +270,6 @@ void MembraneTest::update(DefaultGUIModel::update_flags_t flag) {
 			zap_on = false;
 			I1 = I2 = dI = 0;
 			hold_index = zap_index = 0;
-			selectMode(mem_mode); //redundant. Consider deleting this line
-			selectVoltage(volt_mode); //redundant. Consider deleting this line
 			break;
 		
 		case PAUSE:
@@ -261,7 +307,7 @@ void MembraneTest::customizeGUI(void) {
 
 	// these pushbuttons set the acquisition type (SINGLE or DETAILED)
 	QHBoxLayout *membuttonslayout = new QHBoxLayout;
-	QButtonGroup *membuttonsgroup = new QButtonGroup;
+	membuttonsgroup = new QButtonGroup;
 	membuttonsgroup->setExclusive(true);
 	simple_button = new QPushButton("Simple");
 	simple_button->setCheckable(true);
@@ -275,7 +321,7 @@ void MembraneTest::customizeGUI(void) {
 
 	// set the voltage used for acquisiton (V1, V2, or V3)
 	QHBoxLayout *voltbuttonslayout = new QHBoxLayout;
-	QButtonGroup *voltbuttonsgroup = new QButtonGroup;
+	voltbuttonsgroup = new QButtonGroup;
 	voltbuttonsgroup->setExclusive(true);
 	v1_button = new QPushButton("V1"); 
 	v1_button->setCheckable(true);
@@ -317,51 +363,47 @@ void MembraneTest::toggleZap(void) {
 
 // sets the mode for acquisiton. Sets mode_changed flag when done. 
 void MembraneTest::selectMode(int mode) {
+/*
 	switch (mode) {
 		case SIMPLE:
 			mem_mode = SIMPLE;
-			simple_button->setChecked(true);
 			break;
 
 		case DETAILED:
 			mem_mode = DETAILED;
-			detailed_button->setChecked(true);
 			break;
 
 		default:
 			break;			
 	}
-
+*/
 	mode_changed = true;
+	modify();
 	return;
 }
 
 // change the voltage option based on the GUI selection. 
 void MembraneTest::selectVoltage(int mode) {
+/*
 	switch (mode) {
 		case VOLTAGE1:
-//			Vapp = V1;
 			volt_mode = VOLTAGE1;
-			v1_button->setChecked(true);
 			break;
 
 		case VOLTAGE2:
-//			Vapp = V2;
 			volt_mode = VOLTAGE2;
-			v2_button->setChecked(true);
 			break;
 
 		case VOLTAGE3:
-//			Vapp = V3;
 			volt_mode = VOLTAGE3;
-			v3_button->setChecked(true);
 			break;
 
 		default:
 			break;
 	}
-
+*/
 	volt_changed = true; 
+	modify();
 	return;
 }
 

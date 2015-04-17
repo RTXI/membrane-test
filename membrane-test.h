@@ -27,12 +27,13 @@ class MembraneTest : public DefaultGUIModel {
 		double hold_period;
 		size_t hold_index, hold_count;
 		enum VoltSelect_t {
-			VOLTAGE1 = 1, 
-			VOLTAGE2 = 2, 
-			VOLTAGE3 = 3
+			VOLTAGE1 = 0, 
+			VOLTAGE2 = 1, 
+			VOLTAGE3 = 2
 		};
 		VoltSelect_t volt_mode;
 		bool volt_changed; //not used for anything yet
+		QButtonGroup *membuttonsgroup;
 		QPushButton *v1_button, *v2_button, *v3_button;
 		QLabel *resistance_label;
 
@@ -55,6 +56,7 @@ class MembraneTest : public DefaultGUIModel {
 		double I1, I2, dI;
 		size_t mem_index;
 		std::vector<double> newdata, data;
+		QButtonGroup *voltbuttonsgroup;
 		QPushButton *simple_button, *detailed_button;
 	
 		void computeMembraneProperties(void);
