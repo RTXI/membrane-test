@@ -235,6 +235,8 @@ void MembraneTest::update(DefaultGUIModel::update_flags_t flag) {
 			zap_on = false;
 			I1 = I2 = dI = 0;
 			hold_index = zap_index = 0;
+			hold_count = hold_period * 2 * 1e-3/ period;
+			zap_count = zap_duration * 1e-3 / period;
 			break;
 		
 		case PAUSE:
