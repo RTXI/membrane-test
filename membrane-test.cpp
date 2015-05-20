@@ -236,6 +236,7 @@ void MembraneTest::update(DefaultGUIModel::update_flags_t flag) {
 			I1 = I2 = dI = 0;
 			hold_index = zap_index = 0;
 			hold_count = hold_period * 2 * 1e-3/ period;
+			if (!hold_count) hold_count = 1;
 			zap_count = zap_duration * 1e-3 / period;
 			break;
 		
@@ -250,6 +251,7 @@ void MembraneTest::update(DefaultGUIModel::update_flags_t flag) {
 		case PERIOD:
 			period = RT::System::getInstance()->getPeriod() * 1e-9; //ms
 			hold_count = hold_period * 2 * 1e-3/ period;
+			if (!hold_count) hold_count = 1;
 			zap_count = zap_duration * 1e-3 / period;
 			mode_changed = true;
 			break;
