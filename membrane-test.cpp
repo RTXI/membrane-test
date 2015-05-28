@@ -80,7 +80,8 @@ void MembraneTest::execute(void) {
 	}
 	
 	// Takes input from 2nd and 4th quarters of 1 periodic square pulse.
-	if (mem_mode == SIMPLE) {
+	switch (mem_mode) {
+	case SIMPLE:
 		if  (hold_index < (hold_count/2)) {
 			if (hold_index > (hold_count/4)) {
 				I1 += input(0);
@@ -98,10 +99,10 @@ void MembraneTest::execute(void) {
 			dI = (I1 - I2) / (hold_count/4);
 			I2 = I1 = 0.0;
 		}
-	}
+		break;
 
 	// collects mem_steps * hold_count data points and stores them for later analysis
-	else if (mem_mode == DETAILED) {
+	case DETAILED:
 		if ( hold_index < hold_count / 2 ) {
 			newdata[mem_index] += input(0);
 			mem_index++;
@@ -127,7 +128,8 @@ void MembraneTest::execute(void) {
 				newdata.clear(); //reset 'newdata' for next round of data collection
 				newdata.resize(hold_count, 0); //resize in case period changed. 
 			}
-		}	
+		}
+		break;
 	}
 	return;
 }
@@ -347,11 +349,13 @@ void MembraneTest::selectVoltage(int mode) {
 // computes the membrane properties based on the data acquired in the execute() function
 void MembraneTest::computeMembraneProperties(void) {
 	if ( !getActive() ) return; // if the module is paused, no need to bother computing anything
-	
-	if (mem_mode == SIMPLE) {
+
+	switch (mem_mode) {
+	case SIMPLE:	
 		Rt = fabs( hold_amplitude * 1e-3 / dI ); // SIMPLE mode just uses Ohms law
-	}
-	else if (mem_mode == DETAILED) { // DETAILED is more complex (by Johnathan Bettencourt)
+		break;
+	
+	case DETAILED:	
 		double Vpp = hold_amplitude;
 		unsigned int data_size = hold_count;
 		if( data_size != data.size() ) // Check to make sure data size is correct
@@ -522,6 +526,7 @@ void MembraneTest::computeMembraneProperties(void) {
 		Ra = round(Ra*1e-6*10)/10;
 		Rm = round(Rm*1e-6*10)/10;
 		Cm = round(Cm*1e12*10)/10;
+		break;
 	}
 }
 
