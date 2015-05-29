@@ -319,8 +319,8 @@ void MembraneTest::customizeGUI(void) {
 	resistance_label->setText("------");
 
 	label_timer = new QTimer(this);
-	QObject::connect(timer, SIGNAL(timeout(void)), this, SLOT(computeMembraneProperties(void)));
 	label_timer->start(100);
+	QObject::connect(label_timer, SIGNAL(timeout(void)), this, SLOT(computeMembraneProperties(void)));
 	
 	customlayout->addWidget(buttongroup, 0, 0);
 	customlayout->addWidget(resistance_label, 2, 0);

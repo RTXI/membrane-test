@@ -12,7 +12,7 @@ class MembraneTest : public DefaultGUIModel {
 		void initParameters(void);
 		void customizeGUI(void);
 		void execute(void);
-		void refresh(void);
+//		void refresh(void);
 	
 	protected:
 		virtual void update(DefaultGUIModel::update_flags_t);
@@ -59,12 +59,12 @@ class MembraneTest : public DefaultGUIModel {
 		std::vector<double> newdata, data;
 		QButtonGroup *voltbuttonsgroup;
 		QPushButton *simple_button, *detailed_button;
-	
-		void computeMembraneProperties(void);
-		void updateUIResistance(void);
 		
 	private slots:
 		void toggleZap(void);
 		void selectMode(int);
 		void selectVoltage(int);
+	
+		void computeMembraneProperties(void);
+		void updateUIResistance(void);
 };
