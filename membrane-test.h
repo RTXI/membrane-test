@@ -36,6 +36,7 @@ class MembraneTest : public DefaultGUIModel {
 		QButtonGroup *membuttonsgroup;
 		QPushButton *v1_button, *v2_button, *v3_button;
 		QLabel *resistance_label;
+		QTimer *label_timer;
 
 		//ZAP parameters
 		bool zap_on;

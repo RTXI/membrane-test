@@ -317,6 +317,10 @@ void MembraneTest::customizeGUI(void) {
 	resistance_label = new QLabel;
 	resistance_label->setStyleSheet("color: blue; qproperty-alignment: AlignCenter; font: 32pt");
 	resistance_label->setText("------");
+
+	label_timer = new QTimer(this);
+	QObject::connect(timer, SIGNAL(timeout(void)), this, SLOT(computeMembraneProperties(void)));
+	label_timer->start(100);
 	
 	customlayout->addWidget(buttongroup, 0, 0);
 	customlayout->addWidget(resistance_label, 2, 0);
@@ -349,6 +353,8 @@ void MembraneTest::selectVoltage(int mode) {
 // computes the membrane properties based on the data acquired in the execute() function
 void MembraneTest::computeMembraneProperties(void) {
 	if ( !getActive() ) return; // if the module is paused, no need to bother computing anything
+
+	if (zap_on) return;
 
 	switch (mem_mode) {
 	case SIMPLE:	
@@ -528,6 +534,8 @@ void MembraneTest::computeMembraneProperties(void) {
 		Cm = round(Cm*1e12*10)/10;
 		break;
 	}
+
+	updateUIResistance();
 }
 
 // updates the blue text near the bottom with the resistance. Takes Rt (either acquisiton mode)
@@ -571,6 +579,7 @@ void MembraneTest::updateUIResistance(void){
 }
 
 // overloaded DefaultGUIModel refresh function to also include computing membrane properties and updating the resistance display (the blue text)
+/*
 void MembraneTest::refresh(void) {
 	for (std::map<QString, param_t>::iterator i = parameter.begin(); i!= parameter.end(); ++i) {
 		if (i->second.type & (STATE | EVENT)) {
@@ -588,6 +597,6 @@ void MembraneTest::refresh(void) {
 
 	computeMembraneProperties();
 	updateUIResistance();
-
 	pauseButton->setChecked(!getActive());
 }
+*/
