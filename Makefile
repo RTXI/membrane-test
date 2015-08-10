@@ -2,10 +2,10 @@ PLUGIN_NAME = membrane_test
 
 HEADERS = membrane-test.h
 
-LIBS = -lgsl -lgslcblas
-
 SOURCES = membrane-test.cpp \
-	moc_membrane-test.cpp 
+          moc_membrane-test.cpp 
+
+LIBS = -lgsl -lgslcblas
 
 ### Do not edit below this line ###
 
