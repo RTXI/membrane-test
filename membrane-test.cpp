@@ -242,7 +242,7 @@ void MembraneTest::update(DefaultGUIModel::update_flags_t flag) {
 		
 		case PAUSE:
 			zap_button->setEnabled(false);
-			output(0);
+			output(0) = 0;
 			break;
 		
 		case UNPAUSE:
