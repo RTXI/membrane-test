@@ -16,8 +16,6 @@
  *  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-
-#include <QtGui>
 #include <main_window.h>
 #include <cmath>
 #include <gsl/gsl_linalg.h>
@@ -244,6 +242,7 @@ void MembraneTest::update(DefaultGUIModel::update_flags_t flag) {
 		
 		case PAUSE:
 			zap_button->setEnabled(false);
+			output(0) = 0;
 			break;
 		
 		case UNPAUSE:
@@ -577,26 +576,3 @@ void MembraneTest::updateUIResistance(void){
 
 	resistance_label->setText(RString);	//set the string
 }
-
-// overloaded DefaultGUIModel refresh function to also include computing membrane properties and updating the resistance display (the blue text)
-/*
-void MembraneTest::refresh(void) {
-	for (std::map<QString, param_t>::iterator i = parameter.begin(); i!= parameter.end(); ++i) {
-		if (i->second.type & (STATE | EVENT)) {
-			i->second.edit->setText(QString::number(getValue(i->second.type, i->second.index)));
-			palette.setBrush(i->second.edit->foregroundRole(), Qt::darkGray);
-			i->second.edit->setPalette(palette);
-		} else if ((i->second.type & PARAMETER) && !i->second.edit->isModified() && i->second.edit->text() != *i->second.str_value) {
-			i->second.edit->setText(*i->second.str_value);
-		} else if ((i->second.type & COMMENT) && !i->second.edit->isModified() && i->second.edit->text() != QString::fromStdString(getValueString(COMMENT, i->second.index))) {
-			i->second.edit->setText(QString::fromStdString(getValueString(COMMENT, i->second.index)));
-		}
-	}
-
-	if (zap_on) return;
-
-	computeMembraneProperties();
-	updateUIResistance();
-	pauseButton->setChecked(!getActive());
-}
-*/
