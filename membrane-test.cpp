@@ -22,7 +22,7 @@
 #include "membrane-test.h"
 
 // Create RTXI plugin object
-extern "C" Plugin::Object *createRTXIPlugin(void *) {
+extern "C" Plugin::Object *createRTXIPlugin(void) {
 	return new MembraneTest();
 }
 
