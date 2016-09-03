@@ -16,88 +16,95 @@
  *  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#include <main_window.h>
+#include "membrane-test.h"
 #include <cmath>
 #include <gsl/gsl_linalg.h>
-#include "membrane-test.h"
+#include <main_window.h>
 
 // Create RTXI plugin object
-extern "C" Plugin::Object *createRTXIPlugin(void) { return new MembraneTest(); }
+extern "C" Plugin::Object*
+createRTXIPlugin(void)
+{
+  return new MembraneTest();
+}
 
 // Create varable array for MembraneTest module.
 static DefaultGUIModel::variable_t vars[] = {
-    {
-     "Current Input (A)", "", DefaultGUIModel::INPUT,
-    },
-    {
-     "Voltage Output (V)", "", DefaultGUIModel::OUTPUT,
-    },
-    {
-     "Hold (V1)", "Set the holding potential of the membrane",
-     DefaultGUIModel::PARAMETER | DefaultGUIModel::DOUBLE,
-    },
-    {
-     "Hold (V2)", "Set the holding potential of the membrane",
-     DefaultGUIModel::PARAMETER | DefaultGUIModel::DOUBLE,
-    },
-    {
-     "Hold (V3)", "Set the holding potential of the membrane",
-     DefaultGUIModel::PARAMETER | DefaultGUIModel::DOUBLE,
-    },
-    {
-     "Hold Amplitude",
-     "Set the amplitude of the sine wave used for the holding potential",
-     DefaultGUIModel::PARAMETER | DefaultGUIModel::PARAMETER,
-    },
-    {
-     "Hold Period", "Set the period, or width, of the holding pulses",
-     DefaultGUIModel::PARAMETER | DefaultGUIModel::DOUBLE,
-    },
-    {
-     "Zap Amplitude", "Set the amplitude for the single zap",
-     DefaultGUIModel::PARAMETER | DefaultGUIModel::DOUBLE,
-    },
-    {
-     "Zap Duration", "Duration of the zap pulse",
-     DefaultGUIModel::PARAMETER | DefaultGUIModel::DOUBLE,
-    },
-    //	{ "Update Rate", "Update rate for membrane properties measurement",
-    //DefaultGUIModel::PARAMETER | DefaultGUIModel::UINTEGER, },
-    {
-     "Num. Steps", "Number of steps to use for calculating membrane properties",
-     DefaultGUIModel::PARAMETER | DefaultGUIModel::UINTEGER,
-    },
-    {
-     "Rt", "Total Resistance (Ra + Rm)", DefaultGUIModel::STATE,
-    },
-    {
-     "Cm", "Membrane capacitance", DefaultGUIModel::STATE,
-    },
-    {
-     "Ra", "Access Resistance", DefaultGUIModel::STATE,
-    },
-    {
-     "Rm", "Membrane Resistance", DefaultGUIModel::STATE,
-    },
+  {
+    "Current Input (A)", "", DefaultGUIModel::INPUT,
+  },
+  {
+    "Voltage Output (V)", "", DefaultGUIModel::OUTPUT,
+  },
+  {
+    "Hold (V1)", "Set the holding potential of the membrane",
+    DefaultGUIModel::PARAMETER | DefaultGUIModel::DOUBLE,
+  },
+  {
+    "Hold (V2)", "Set the holding potential of the membrane",
+    DefaultGUIModel::PARAMETER | DefaultGUIModel::DOUBLE,
+  },
+  {
+    "Hold (V3)", "Set the holding potential of the membrane",
+    DefaultGUIModel::PARAMETER | DefaultGUIModel::DOUBLE,
+  },
+  {
+    "Hold Amplitude",
+    "Set the amplitude of the sine wave used for the holding potential",
+    DefaultGUIModel::PARAMETER | DefaultGUIModel::PARAMETER,
+  },
+  {
+    "Hold Period", "Set the period, or width, of the holding pulses",
+    DefaultGUIModel::PARAMETER | DefaultGUIModel::DOUBLE,
+  },
+  {
+    "Zap Amplitude", "Set the amplitude for the single zap",
+    DefaultGUIModel::PARAMETER | DefaultGUIModel::DOUBLE,
+  },
+  {
+    "Zap Duration", "Duration of the zap pulse",
+    DefaultGUIModel::PARAMETER | DefaultGUIModel::DOUBLE,
+  },
+  //	{ "Update Rate", "Update rate for membrane properties measurement",
+  // DefaultGUIModel::PARAMETER | DefaultGUIModel::UINTEGER, },
+  {
+    "Num. Steps", "Number of steps to use for calculating membrane properties",
+    DefaultGUIModel::PARAMETER | DefaultGUIModel::UINTEGER,
+  },
+  {
+    "Rt", "Total Resistance (Ra + Rm)", DefaultGUIModel::STATE,
+  },
+  {
+    "Cm", "Membrane capacitance", DefaultGUIModel::STATE,
+  },
+  {
+    "Ra", "Access Resistance", DefaultGUIModel::STATE,
+  },
+  {
+    "Rm", "Membrane Resistance", DefaultGUIModel::STATE,
+  },
 };
 
 static size_t num_vars = sizeof(vars) / sizeof(DefaultGUIModel::variable_t);
 
 MembraneTest::MembraneTest(void)
-    : DefaultGUIModel("Membrane Properties", ::vars, ::num_vars) {
+  : DefaultGUIModel("Membrane Properties", ::vars, ::num_vars)
+{
   setWhatsThis(
-      "<p><b>MembraneTest:</b><br>Allows users to hold membranes at designated "
-      "potentials and then zap them or measure their capcitance, access "
-      "resistance, and overall resistance.</p>");
+    "<p><b>MembraneTest:</b><br>Allows users to hold membranes at designated "
+    "potentials and then zap them or measure their capcitance, access "
+    "resistance, and overall resistance.</p>");
   DefaultGUIModel::createGUI(vars, num_vars);
-  initParameters();  // initialize parameters
-  customizeGUI();    // customize the GUI
-  update(INIT);      // sync the GUI with the intialized parameters
-  refresh();         // refresh the GUI to it displays the synced changes
+  initParameters(); // initialize parameters
+  customizeGUI();   // customize the GUI
+  update(INIT);     // sync the GUI with the intialized parameters
+  refresh();        // refresh the GUI to it displays the synced changes
   QTimer::singleShot(0, this, SLOT(resizeMe()));
 };
 
-MembraneTest::~MembraneTest(void) {}
+MembraneTest::~MembraneTest(void)
+{
+}
 
 /* Executes the real-time portion of the module. There are two modes:
  *   Simple - calculate resistance from measuring current generated by feeding
@@ -106,11 +113,13 @@ MembraneTest::~MembraneTest(void) {}
  *
  * The zap function overrides all data acquisition and outputs elevated voltage.
  */
-void MembraneTest::execute(void) {
+void
+MembraneTest::execute(void)
+{
   // perform the zap function
   if (zap_on) {
     if (++zap_index < zap_count)
-      output(0) = (zap_amplitude + Vapp) * 1e-3;  // mV
+      output(0) = (zap_amplitude + Vapp) * 1e-3; // mV
     else {
       zap_on = false;
     }
@@ -124,16 +133,16 @@ void MembraneTest::execute(void) {
         if (hold_index > (hold_count / 4)) {
           I1 += input(0);
         }
-        output(0) = (Vapp + hold_amplitude) * 1e-3;  // mV
+        output(0) = (Vapp + hold_amplitude) * 1e-3; // mV
       } else {
         if (hold_index > (3 * hold_count) / 4) {
           I2 += input(0);
         }
-        output(0) = Vapp * 1e-3;  // mV
+        output(0) = Vapp * 1e-3; // mV
       }
 
       if (!(++hold_index %=
-            hold_count)) {  // if hold_count points are acquired, do calculation
+            hold_count)) { // if hold_count points are acquired, do calculation
         dI = (I1 - I2) / (hold_count / 4);
         I2 = I1 = 0.0;
       }
@@ -146,12 +155,12 @@ void MembraneTest::execute(void) {
         newdata[mem_index] += input(0);
         mem_index++;
 
-        output(0) = (Vapp + hold_amplitude) * 1e-3;  // mV
+        output(0) = (Vapp + hold_amplitude) * 1e-3; // mV
       } else {
         newdata[mem_index] += input(0);
         mem_index++;
 
-        output(0) = Vapp * 1e-3;  // mV
+        output(0) = Vapp * 1e-3; // mV
       }
 
       // increment hold_index and output chunk of data when hold_count points
@@ -163,10 +172,10 @@ void MembraneTest::execute(void) {
         // == mem_steps
         if (++mem_steps_saved > mem_steps) {
           mem_steps_saved = 1;
-          data = newdata;  // save collected data into 'data' for later
+          data = newdata; // save collected data into 'data' for later
           mem_index = 0;
-          newdata.clear();  // reset 'newdata' for next round of data collection
-          newdata.resize(hold_count, 0);  // resize in case period changed.
+          newdata.clear(); // reset 'newdata' for next round of data collection
+          newdata.resize(hold_count, 0); // resize in case period changed.
         }
       }
       break;
@@ -174,10 +183,12 @@ void MembraneTest::execute(void) {
   return;
 }
 
-void MembraneTest::initParameters(void) {
+void
+MembraneTest::initParameters(void)
+{
   V1 = Vapp = 0;
   V2 = -80;
-  V3 = -40;  // mv
+  V3 = -40; // mv
   hold_amplitude = 10;
   hold_period = 10;
   zap_amplitude = 1000;
@@ -188,7 +199,7 @@ void MembraneTest::initParameters(void) {
   mem_steps_saved = 1;
   mem_mode = SIMPLE;
   volt_mode = VOLTAGE1;
-  period = RT::System::getInstance()->getPeriod() * 1e-9;  // ms
+  period = RT::System::getInstance()->getPeriod() * 1e-9; // ms
 
   hold_count = hold_period * 2 * 1e-3 / period;
   hold_index = 0;
@@ -202,7 +213,9 @@ void MembraneTest::initParameters(void) {
   Rm = 0;
 }
 
-void MembraneTest::update(DefaultGUIModel::update_flags_t flag) {
+void
+MembraneTest::update(DefaultGUIModel::update_flags_t flag)
+{
   switch (flag) {
     case INIT:
       setParameter("Hold (V1)", V1);
@@ -212,7 +225,7 @@ void MembraneTest::update(DefaultGUIModel::update_flags_t flag) {
       setParameter("Hold Period", hold_period);
       setParameter("Zap Amplitude", zap_amplitude);
       setParameter("Zap Duration", zap_duration);
-      //setParameter("Update Rate", mem_update);
+      // setParameter("Update Rate", mem_update);
       setParameter("Num. Steps", mem_steps);
       setState("Rt", Rt);
       setState("Cm", Cm);
@@ -274,14 +287,15 @@ void MembraneTest::update(DefaultGUIModel::update_flags_t flag) {
       hold_period = getParameter("Hold Period").toDouble();
       zap_amplitude = getParameter("Zap Amplitude").toDouble();
       zap_duration = getParameter("Zap Duration").toDouble();
-      //mem_update = getParameter("Update
-      //Rate").toInt();
+      // mem_update = getParameter("Update
+      // Rate").toInt();
       mem_steps = getParameter("Num. Steps").toInt();
       zap_on = false;
       I1 = I2 = dI = 0;
       hold_index = zap_index = 0;
       hold_count = hold_period * 2 * 1e-3 / period;
-      if (!hold_count) hold_count = 1;
+      if (!hold_count)
+        hold_count = 1;
       zap_count = zap_duration * 1e-3 / period;
       break;
 
@@ -295,9 +309,10 @@ void MembraneTest::update(DefaultGUIModel::update_flags_t flag) {
       break;
 
     case PERIOD:
-      period = RT::System::getInstance()->getPeriod() * 1e-9;  // ms
+      period = RT::System::getInstance()->getPeriod() * 1e-9; // ms
       hold_count = hold_period * 2 * 1e-3 / period;
-      if (!hold_count) hold_count = 1;
+      if (!hold_count)
+        hold_count = 1;
       zap_count = zap_duration * 1e-3 / period;
       mode_changed = true;
       break;
@@ -309,22 +324,24 @@ void MembraneTest::update(DefaultGUIModel::update_flags_t flag) {
 
 // create the custom GUI for the module. Trust me, it's pretty rad. (use online
 // Qt4 documentation)
-void MembraneTest::customizeGUI(void) {
-  QGridLayout *customlayout =
-      DefaultGUIModel::getLayout();  // get the current layout instance
+void
+MembraneTest::customizeGUI(void)
+{
+  QGridLayout* customlayout =
+    DefaultGUIModel::getLayout(); // get the current layout instance
 
-  QGroupBox *buttongroup =
-      new QGroupBox("Controls");  // create group for control buttons
-  QVBoxLayout *buttongrouplayout = new QVBoxLayout;
+  QGroupBox* buttongroup =
+    new QGroupBox("Controls"); // create group for control buttons
+  QVBoxLayout* buttongrouplayout = new QVBoxLayout;
   buttongroup->setLayout(buttongrouplayout);
 
-  QHBoxLayout *zapbuttonslayout = new QHBoxLayout;
-  zap_button = new QPushButton("Zap");  // button starts zap funtionality
+  QHBoxLayout* zapbuttonslayout = new QHBoxLayout;
+  zap_button = new QPushButton("Zap"); // button starts zap funtionality
   zapbuttonslayout->addWidget(zap_button);
   buttongrouplayout->addLayout(zapbuttonslayout);
 
   // these pushbuttons set the acquisition type (SINGLE or DETAILED)
-  QHBoxLayout *membuttonslayout = new QHBoxLayout;
+  QHBoxLayout* membuttonslayout = new QHBoxLayout;
   membuttonsgroup = new QButtonGroup;
   membuttonsgroup->setExclusive(true);
   simple_button = new QPushButton("Simple");
@@ -338,7 +355,7 @@ void MembraneTest::customizeGUI(void) {
   buttongrouplayout->addLayout(membuttonslayout);
 
   // set the voltage used for acquisiton (V1, V2, or V3)
-  QHBoxLayout *voltbuttonslayout = new QHBoxLayout;
+  QHBoxLayout* voltbuttonslayout = new QHBoxLayout;
   voltbuttonsgroup = new QButtonGroup;
   voltbuttonsgroup->setExclusive(true);
   v1_button = new QPushButton("V1");
@@ -366,7 +383,7 @@ void MembraneTest::customizeGUI(void) {
   // label displays the total restance in big, blue font. You can't miss it.
   resistance_label = new QLabel;
   resistance_label->setStyleSheet(
-      "color: blue; qproperty-alignment: AlignCenter; font: 32pt");
+    "color: blue; qproperty-alignment: AlignCenter; font: 32pt");
   resistance_label->setText("------");
 
   label_timer = new QTimer(this);
@@ -376,12 +393,14 @@ void MembraneTest::customizeGUI(void) {
 
   customlayout->addWidget(buttongroup, 0, 0);
   customlayout->addWidget(resistance_label, 2, 0);
-  setLayout(customlayout);  // sets the changes made here to the existing GUI
-                            // already created
+  setLayout(customlayout); // sets the changes made here to the existing GUI
+                           // already created
 }
 
 // toggles the zap. Does nothing if a zap is already running
-void MembraneTest::toggleZap(void) {
+void
+MembraneTest::toggleZap(void)
+{
   if (!zap_on) {
     zap_on = true;
     zap_index = 0;
@@ -390,14 +409,18 @@ void MembraneTest::toggleZap(void) {
 }
 
 // sets the mode for acquisiton. Sets mode_changed flag when done.
-void MembraneTest::selectMode(int mode) {
+void
+MembraneTest::selectMode(int mode)
+{
   mode_changed = true;
   modify();
   return;
 }
 
 // change the voltage option based on the GUI selection.
-void MembraneTest::selectVoltage(int mode) {
+void
+MembraneTest::selectVoltage(int mode)
+{
   volt_changed = true;
   modify();
   return;
@@ -405,36 +428,40 @@ void MembraneTest::selectVoltage(int mode) {
 
 // computes the membrane properties based on the data acquired in the execute()
 // function
-void MembraneTest::computeMembraneProperties(void) {
+void
+MembraneTest::computeMembraneProperties(void)
+{
   if (!getActive())
-    return;  // if the module is paused, no need to bother computing anything
+    return; // if the module is paused, no need to bother computing anything
 
-  if (zap_on) return;
+  if (zap_on)
+    return;
 
   switch (mem_mode) {
     case SIMPLE:
-      Rt = fabs(hold_amplitude * 1e-3 / dI);  // SIMPLE mode just uses Ohms law
+      Rt = fabs(hold_amplitude * 1e-3 / dI); // SIMPLE mode just uses Ohms law
       break;
 
     case DETAILED:
       double Vpp = hold_amplitude;
       unsigned int data_size = hold_count;
-      if (data_size != data.size())  // Check to make sure data size is correct
+      if (data_size != data.size()) // Check to make sure data size is correct
         return;
 
       // Taken from electrophys_plugin, written by Jonathan Bettencourt
-      for (size_t i = 0; i < data_size; ++i) data[i] /= mem_steps;
+      for (size_t i = 0; i < data_size; ++i)
+        data[i] /= mem_steps;
 
       double I1 = 0.0;
       for (size_t i =
-               static_cast<size_t>(round(data_size / 2 - ceil(data_size / 8)));
+             static_cast<size_t>(round(data_size / 2 - ceil(data_size / 8)));
            i < data_size / 2; ++i)
         I1 += data[i];
       I1 /= ceil(data_size / 8);
 
       double I2 = 0.0;
       for (size_t i =
-               static_cast<size_t>(round(data_size - ceil(data_size / 8)));
+             static_cast<size_t>(round(data_size - ceil(data_size / 8)));
            i < data_size; ++i)
         I2 += data[i];
       I2 /= ceil(data_size / 8);
@@ -476,10 +503,10 @@ void MembraneTest::computeMembraneProperties(void) {
         }
 
         double A[3 * 3] = {
-            data_size / 2 - xi, SY, t, SY, SYSY, tSY, t, tSY, tt,
+          data_size / 2 - xi, SY, t, SY, SYSY, tSY, t, tSY, tt,
         };
         double B[3] = {
-            Y, YSY, Yt,
+          Y, YSY, Yt,
         };
         double V[3 * 3];
         double S[3];
@@ -531,10 +558,10 @@ void MembraneTest::computeMembraneProperties(void) {
         }
 
         double A[3 * 3] = {
-            data_size - xi, SY, t, SY, SYSY, tSY, t, tSY, tt,
+          data_size - xi, SY, t, SY, SYSY, tSY, t, tSY, tt,
         };
         double B[3] = {
-            Y, YSY, Yt,
+          Y, YSY, Yt,
         };
         double V[3 * 3];
         double S[3];
@@ -559,11 +586,11 @@ void MembraneTest::computeMembraneProperties(void) {
 
       Rt = Vpp * 1e-3 /
            fabs(I1 -
-                I2);  // calculates the STATE variable (Rt for total resistance)
+                I2); // calculates the STATE variable (Rt for total resistance)
 
-      Ra = tau * Vpp * 1e-3 / Qt;        // access resistance
-      Rm = Rt - Ra;                      // membrane resistance
-      Cm = Qt * Rt / (Vpp * 1e-3 * Rm);  // membrance capacitance
+      Ra = tau * Vpp * 1e-3 / Qt;       // access resistance
+      Rm = Rt - Ra;                     // membrane resistance
+      Cm = Qt * Rt / (Vpp * 1e-3 * Rm); // membrance capacitance
 
       // round them so they look pleasant in the GUI
       Rt = round(Rt * 1e-6 * 10) / 10;
@@ -578,7 +605,9 @@ void MembraneTest::computeMembraneProperties(void) {
 
 // updates the blue text near the bottom with the resistance. Takes Rt (either
 // acquisiton mode)
-void MembraneTest::updateUIResistance(void) {
+void
+MembraneTest::updateUIResistance(void)
+{
   double R = Rt;
   size_t exp = 0;
   QChar omega = QChar(0x3A9);
@@ -612,10 +641,10 @@ void MembraneTest::updateUIResistance(void) {
       RString.append(" T").append(omega);
     default:
       QString suffix;
-      suffix.sprintf(" * 1e%lu", 3 * exp);  // if the resistance is very, very
-                                            // big, just show it in scientific
-                                            // notation.
+      suffix.sprintf(" * 1e%lu", 3 * exp); // if the resistance is very, very
+                                           // big, just show it in scientific
+                                           // notation.
   }
 
-  resistance_label->setText(RString);  // set the string
+  resistance_label->setText(RString); // set the string
 }
